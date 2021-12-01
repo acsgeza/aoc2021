@@ -10,7 +10,7 @@ class Day :RunAoc{
     val init_memory:MutableList<Int> by lazy {resetMemory()}
     private fun resetMemory(): MutableList<Int> {
 
-        val sc= Scanner(File("aoc_1/input_a.txt")).useDelimiter("\\n")
+        val sc= Scanner(File("aoc_1/input_a.txt"))
         val ls = mutableListOf<Int>()
         while(sc.hasNextInt()){
             ls.add(sc.nextInt())
@@ -19,7 +19,7 @@ class Day :RunAoc{
     }
 
     override fun a():Int {
-        val sc= Scanner(File("aoc_1/input_a.txt")).useDelimiter("\\n")
+        val sc= Scanner(File("aoc_1/input_a.txt"))
         var counter = 0
         var prev = Int.MAX_VALUE
         while(sc.hasNextInt()){
