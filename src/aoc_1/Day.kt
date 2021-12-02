@@ -1,6 +1,7 @@
 package aoc_1
 
 import RunAoc
+import utils.readInputAsInts
 import java.io.File
 import java.util.*
 
@@ -18,7 +19,7 @@ class Day :RunAoc{
         return ls
     }
 
-    override fun a():Int {
+     fun a_own():Int {
         val sc= Scanner(File("aoc_1/input_a.txt"))
         var counter = 0
         var prev = Int.MAX_VALUE
@@ -32,8 +33,14 @@ class Day :RunAoc{
         return counter
     }
 
+    // FROM NET
+    override fun a():Int {
+        val input= readInputAsInts(1)
+        return input.windowed(2).count { it[1] > it[0]}
+    }
 
-    override fun b():Int {
+
+    fun b_own():Int {
         val ls= mutableListOf<Int>().apply { addAll(init_memory) }
         var counter=0
         for ((index, value) in ls.withIndex()) {
@@ -44,5 +51,11 @@ class Day :RunAoc{
             }
         }
         return counter
+    }
+
+    // FROM NET
+    override fun b():Int {
+        val input= readInputAsInts(1)
+        return input.windowed(3).windowed(2).count { (a,b) -> a.sum() < b.sum() }
     }
 }
