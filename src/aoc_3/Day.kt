@@ -1,54 +1,45 @@
 package aoc_3
 
 import RunAoc
-import java.io.File
-import java.util.stream.Collectors
-
+import utils.readInput
 
 class Day :RunAoc{
-    val lines= File("aoc_3/input_a.txt")
-        .readLines()
-        .map { it.split(" ") }
-
+    val DIM=12
+    val input=readInput(3)
+    val bits=Array(DIM) { 0 }
     override fun a(): Int {
-
-        val forward=lines.stream().filter { it.first().equals("forward")}
-            .map { Integer.parseInt(it[1]) }
-            .collect(Collectors.toList())
-            .sum()
-        val down=lines.stream().filter { it.first().equals("down")}
-            .map { Integer.parseInt(it[1]) }
-            .collect(Collectors.toList())
-            .sum()
-        val up=lines.stream().filter { it.first().equals("up")}
-            .map { Integer.parseInt(it[1]) }
-            .collect(Collectors.toList())
-            .sum()
-
-        return forward*(down-up)
-    }
-
-    override fun b():Int {
-        var aim=0
-        var depth=0
-        var forward=0
-        lines.forEach {
-            val move=Integer.parseInt(it[1])
-            when(it.first()){
-                "down" -> {
-                    aim+=move
-                }
-                "up" -> {
-                    aim-=move
-                }
-                "forward" -> {
-                    forward+=move
-                    depth+=move*aim
-                }
-
+        input.forEach {
+            for(i in 0..DIM-1) {
+                bits[i] += it[i].digitToInt()
             }
         }
+       val gArray=bits.map { if(it>(input.size-it)) '1' else '0'}
+       val eArray=bits.map { if(it<(input.size-it)) '1' else '0'}
+        val gamma=String(gArray.toCharArray()).toInt(2)
+        val epsilon=String(eArray.toCharArray()).toInt(2)
 
-        return forward*depth
+        return gamma*epsilon
+    }
+    enum class Bool(val value:Int){
+        OXYGEN(1),
+        CO2(0);
+    }
+    fun filtered( filteredList:List<String>,pos:Int,rating:Bool): List<String> {
+        val one=filteredList.filter { it[pos].digitToInt()==rating.value}.count()
+        val more = one>filteredList.size-one
+        val choose= if(more) 1 else if(one==filteredList.size-one) rating.value else 0
+        return filteredList.filter { choose == it[pos].digitToInt() }
+    }
+
+    fun getRating(filteredList:List<String>,rating: Bool):Int{
+        var newList=filteredList
+        for( i in 0..DIM-1) {
+            newList = filtered(newList, i,rating)
+            if (newList.size==1) break
+        }
+        return newList[0].toInt(2)
+    }
+    override fun b():Int {
+        return getRating(input,Bool.OXYGEN)*getRating(input,Bool.CO2)
     }
 }
