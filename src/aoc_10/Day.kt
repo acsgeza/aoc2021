@@ -23,7 +23,7 @@ class Day : RunAoc {
             while(rev.isNotEmpty()) {
                 val c = rev.removeLast()
                 score=score* BigInteger.valueOf(5)
-                score += pointsB.getOrDefault(opened.getValue(c), 0).toBigInteger()
+                score += pointsB.getValue(opened.getValue(c)).toBigInteger()
             }
             score
         }.sorted()
