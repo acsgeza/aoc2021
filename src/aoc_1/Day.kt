@@ -5,7 +5,9 @@ import utils.readInputAsInts
 import java.io.File
 import java.util.*
 
-
+/**
+ * Increased adjacent elements
+ */
 class Day :RunAoc{
 
     val init_memory:MutableList<Int> by lazy {resetMemory()}
@@ -34,6 +36,9 @@ class Day :RunAoc{
     }
 
     // FROM NET
+    /**
+     *  Check two adjacent elems
+     */
     override fun a():Int {
         val input= readInputAsInts(1)
         return input.windowed(2).count { it[1] > it[0]}
@@ -54,6 +59,9 @@ class Day :RunAoc{
     }
 
     // FROM NET
+    /**
+     * Check 2 adjacent 3-groups elements
+     */
     override fun b():Int {
         val input= readInputAsInts(1)
         return input.windowed(3).windowed(2).count { (a,b) -> a.sum() < b.sum() }

@@ -4,6 +4,9 @@ import RunAoc
 import utils.BorderedTable
 import utils.readInput
 
+/**
+ * Find the basins
+ */
 class Day : RunAoc {
     val input = ArrayList<String>(readInput(9))
     val cols = input[0].length

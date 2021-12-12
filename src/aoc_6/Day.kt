@@ -4,6 +4,10 @@ import RunAoc
 import java.io.File
 import java.math.BigInteger
 
+/**
+ * boarn every Six days
+ */
+
 class Day :RunAoc{
     val file = File("aoc_6","input_a.txt").readText().trim()
     var input=file.split(",").map {it.toInt()}.toMutableList()

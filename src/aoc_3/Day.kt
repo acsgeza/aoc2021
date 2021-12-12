@@ -3,6 +3,10 @@ package aoc_3
 import RunAoc
 import utils.readInput
 
+/**
+ * Weight digits in position
+ * Filter the most common
+ */
 class Day :RunAoc{
     val DIM=12
     val input=readInput(3)

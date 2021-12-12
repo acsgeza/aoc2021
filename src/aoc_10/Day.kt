@@ -4,6 +4,9 @@ import RunAoc
 import utils.readInput
 import java.math.BigInteger
 
+/**
+ * Opening and Closing Brackets
+ */
 data class Brackets(val ch: Char, var open: Int, var close: Int)
 class Day : RunAoc {
     val input = ArrayList<String>(readInput(10))

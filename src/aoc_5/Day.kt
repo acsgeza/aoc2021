@@ -4,6 +4,10 @@ import RunAoc
 import utils.readInput
 import java.lang.Math.abs
 
+/**
+ * Overlapping lines in Table
+ */
+
 data class Point(var x:Int, var y:Int){
     companion object PointHelper {
         fun getPoint( coord:String): Point {

@@ -4,6 +4,9 @@ import RunAoc
 import java.io.File
 import java.util.stream.Collectors
 
+/**
+ * Moving horizontal and depth
+ */
 
 class Day :RunAoc{
     val lines= File("aoc_2/input_a.txt")

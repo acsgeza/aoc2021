@@ -4,6 +4,9 @@ import RunAoc
 import java.io.File
 import java.util.Collections.addAll
 
+/**
+ * Reborn and populate
+ */
 
 class Day : RunAoc {
     private lateinit var r: List<MutableList<Int>>
@@ -16,7 +19,6 @@ class Day : RunAoc {
         for(i in 1..100) reborn()
         return flash
     }
-
 
     override fun b(): Int {
         @Suppress("UNCHECKED_CAST")

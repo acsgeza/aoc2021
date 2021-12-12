@@ -3,6 +3,10 @@ package aoc_8
 import RunAoc
 import utils.readInput
 
+/**
+ * Digital display
+ */
+
 class Day : RunAoc {
     val input = ArrayList<String>(readInput(8))
     override fun a(): Int {

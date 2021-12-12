@@ -3,6 +3,9 @@ package aoc_12
 import RunAoc
 import utils.readInput
 
+/**
+ * Graph variations
+ */
 class Day : RunAoc {
     val input = ArrayList<String>(readInput(12))
     val small = emptySet<String>().toMutableSet()
@@ -77,7 +80,6 @@ class Day : RunAoc {
                     }
                 }
             }
-
         }
     }
 
