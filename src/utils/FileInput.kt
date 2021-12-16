@@ -3,6 +3,7 @@ package utils
 import java.io.File
 import java.time.LocalDate
 
+fun readText(day: Int)=File("aoc_$day","input_a.txt").readText()
 fun readInput(day:Int)= File("aoc_$day","input_a.txt").readLines()
 fun readInput(day:Int,filename:String)= File("aoc_$day",filename).readLines()
 fun readInputAsInts(day:Int)= File("aoc_$day","input_a.txt").readLines().map {it.toInt()}

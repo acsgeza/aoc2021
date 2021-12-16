@@ -1,10 +1,10 @@
-package aoc_16
+package aoc_17
 
 import RunAoc
 import utils.readInput
 
 class Day :RunAoc{
-    val input = ArrayList<String>(readInput(16))
+    val input = ArrayList<String>(readInput(17))
     override fun a(): Int {
         return 0
     }
