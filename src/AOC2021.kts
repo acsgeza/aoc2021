@@ -1,8 +1,8 @@
 import java.time.LocalDate
 import kotlin.reflect.full.createInstance
 
-val TODAY = true
-val runday= if (TODAY) LocalDate.now() else LocalDate.parse("2021-12-21")
+val TODAY = false
+val runday= if (TODAY) LocalDate.now() else LocalDate.parse("2021-12-24")
 val day =runday.dayOfMonth
 println("day: $day")
 val className=Class.forName("aoc_${day}.Day")

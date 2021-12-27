@@ -21,12 +21,6 @@ class Day :RunAoc{
         return playWithDeterministicDice()
     }
 
-    private fun rotateBoard(startOnBoard: Int, roll3: Int): Int {
-        var start = startOnBoard
-        start += roll3
-        if (start > 10) start = (start - 1) % 10 + 1
-        return start
-    }
 
     override fun b():Int {
         println(playWithDiracDice().maxScore())

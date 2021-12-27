@@ -5,107 +5,60 @@ import utils.readInput
 
 class Day :RunAoc{
     val input = ArrayList<String>(readInput(22))
+    private val cuboids = input.map { Cuboid.from(it) }
     override fun a(): Int {
-        val litLights = mutableSetOf<Point>()
-
-        input.forEach { line ->
-                if (line.startsWith("on ")) {
-                    val cuboid = Cuboid.parse(line.substring(3))
-                    cuboid.allValidCoords.forEach { litLights.add(it) }
-                } else {
-                    val cuboid = Cuboid.parse(line.substring(4))
-                    cuboid.allValidCoords.forEach { litLights.remove(it) }
-                }
-            }
-
-        return litLights.size
-    }
-
-    override fun b():Int {
-        var litCuboids = setOf<Cuboid>()
-
-        input.forEach { line ->
-                val (command, raw) = line.split(" ")
-                val cuboid = Cuboid.parse(raw)
-                val newCuboids = mutableSetOf<Cuboid>()
-
-                litCuboids.forEach { old -> newCuboids += old - cuboid }
-                if (command == "on") newCuboids += cuboid
-
-                litCuboids = newCuboids
-            }
-        println(litCuboids.sumOf { it.uLongSize })
+        println(solve(cuboids.take(20)))
         return 0
     }
 
-    data class Point(val x: Int, val y: Int, val z: Int)
+    override fun b():Int {
+        println(solve(cuboids))
+        return 0
+    }
 
-    data class Cuboid(val x: IntRange, val y: IntRange, val z: IntRange) {
-        val size: Int = (x.last - x.first + 1) * (y.last - y.first + 1) * (z.last - z.first + 1)
-        val uLongSize: ULong =
-            (x.last - x.first + 1).toULong() * (y.last - y.first + 1).toULong() * (z.last - z.first + 1).toULong()
+    private fun solve(cuboids: List<Cuboid>): Long {
+         val cubints=cuboids.fold(listOf<Cuboid>()) { volumes, cuboid ->
+            (volumes + volumes.mapNotNull { it intersect cuboid }).let {
+                if (cuboid.on) it + cuboid else it
+            }
+        }
+        println(cubints)
+        return cubints.sumOf { it.volume() }
+    }
 
-        val allValidCoords: Iterator<Point> = iterator {
-            x.forEach x@{ i ->
-                if (i !in -50..50) return@x
-                y.forEach y@{ j ->
-                    if (j !in -50..50) return@y
-                    z.forEach z@{ k ->
-                        if (k !in -50..50) return@z
-                        yield(Point(i, j, k))
-                    }
-                }
+    private class Cuboid(val on: Boolean, val x: IntRange, val y: IntRange, val z: IntRange) {
+        fun volume(): Long = (x.size().toLong() * y.size().toLong() * z.size().toLong()) * if (on) 1 else -1
+
+        infix fun intersect(other: Cuboid): Cuboid? {
+            return when (x.intersects(other.x) && y.intersects(other.y) && z.intersects(other.z)) {
+                true -> Cuboid(
+                    !on,
+                    maxOf(x.first, other.x.first)..minOf(x.last, other.x.last),
+                    maxOf(y.first, other.y.first)..minOf(y.last, other.y.last),
+                    maxOf(z.first, other.z.first)..minOf(z.last, other.z.last),
+                )
+                false -> null
             }
         }
 
-        infix fun overlaps(other: Cuboid): Boolean {
-            fun overlap(a: Cuboid, b: Cuboid): Boolean {
-                return (a.x.first in b.x || a.x.last in b.x) &&
-                        (a.y.first in b.y || a.y.last in b.y) &&
-                        (a.z.first in b.z || a.z.last in b.z)
-            }
-            return overlap(this, other) || overlap(other, this)
-        }
 
-        operator fun minus(other: Cuboid): List<Cuboid> {
-            if (other.x.last < x.first || x.last < other.x.first || other.y.last < y.first || y.last < other.y.first || other.z.last < z.first || z.last < other.z.first) {
-                return listOf(this)
-            }
-            val xBelow = (minOf(x.first, other.x.first)..maxOf(x.first - 1, other.x.first - 1))
-            val xMid = (maxOf(x.first, other.x.first))..(minOf(x.last, other.x.last))
-            val xAbove = (minOf(x.last + 1, other.x.last + 1)..maxOf(x.last, other.x.last))
+        private fun IntRange.size() = last - first + 1
 
-            val yBelow = (minOf(y.first, other.y.first)..maxOf(y.first - 1, other.y.first - 1))
-            val yMid = (maxOf(y.first, other.y.first))..(minOf(y.last, other.y.last))
-            val yAbove = (minOf(y.last + 1, other.y.last + 1)..maxOf(y.last, other.y.last))
-
-            val zBelow = (minOf(z.first, other.z.first)..maxOf(z.first - 1, other.z.first - 1))
-            val zMid = (maxOf(z.first, other.z.first))..(minOf(z.last, other.z.last))
-            val zAbove = (minOf(z.last + 1, other.z.last + 1)..maxOf(z.last, other.z.last))
-
-            val xs = listOf(xBelow, xAbove, xMid).filter { !it.isEmpty() }
-            val ys = listOf(yBelow, yAbove, yMid).filter { !it.isEmpty() }
-            val zs = listOf(zBelow, zAbove, zMid).filter { !it.isEmpty() }
-            val remaining = mutableListOf<Cuboid>()
-            xs.forEach { newX ->
-                ys.forEach { newY ->
-                    zs.forEach z@{ newZ ->
-                        if (newX.isEmpty() || newY.isEmpty() || newZ.isEmpty()) return@z
-                        val c = Cuboid(newX, newY, newZ)
-                        if (c overlaps this && !(c overlaps other)) remaining.add(c)
-                    }
-                }
-            }
-            return remaining
+        private infix fun IntRange.intersects(other: IntRange): Boolean = first <= other.last && last >= other.first
+        override fun toString(): String {
+            return "Cuboid(on=$on, x=$x, y=$y, z=$z)"
         }
 
         companion object {
-            fun parse(raw: String): Cuboid {
-                val (xRaw, yRaw, zRaw) = raw.split(",")
-                val xRangeRaw = xRaw.substring(2).split("..").map { it.toInt() }
-                val yRangeRaw = yRaw.substring(2).split("..").map { it.toInt() }
-                val zRangeRaw = zRaw.substring(2).split("..").map { it.toInt() }
-                return Cuboid(xRangeRaw[0]..xRangeRaw[1], yRangeRaw[0]..yRangeRaw[1], zRangeRaw[0]..zRangeRaw[1])
+            fun from(line: String): Cuboid {
+                val pattern = """(on|off) x=(-?\d+)\.\.(-?\d+),y=(-?\d+)\.\.(-?\d+),z=(-?\d+)\.\.(-?\d+)""".toRegex()
+                val (command, x1, x2, y1, y2, z1, z2) = pattern.matchEntire(line)!!.destructured
+                return Cuboid(
+                    command == "on",
+                    (x1.toInt()..x2.toInt()),
+                    (y1.toInt()..y2.toInt()),
+                    (z1.toInt()..z2.toInt())
+                )
             }
         }
     }
